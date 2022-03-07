@@ -57,6 +57,7 @@ pipeline {
           try {
             testImage.inside('-v $WORKSPACE:/output -u root') {
               sh """
+                sudo npm install -g mocha
                 cd $WORKSPACE/server
                 npm run test:unit
                 
