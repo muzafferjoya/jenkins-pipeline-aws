@@ -3,7 +3,7 @@ def REPOSITORY
 def REPOSITORY_TEST
 def GIT_COMMIT_HASH
 def ACCOUNT_REGISTRY_PREFIX
-def ecr_repo
+def ECR_REPO
 
 
 
@@ -40,7 +40,7 @@ pipeline {
       steps {
         echo 'Start building the project docker image for tests' 
         script {
-          testImage = docker.build("$REPOSITORY_TEST/$ecr_repo", "-f ./Dockerfile.test .")
+          testImage = docker.build("$REPOSITORY_TEST/$ECR_REPO", "-f ./Dockerfile.test .")
           testImage.push()
         } 
       }
