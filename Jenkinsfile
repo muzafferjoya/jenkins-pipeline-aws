@@ -33,7 +33,7 @@ pipeline {
          S3_LOGS = S3_LOGS.trim()
          DATE_NOW = DATE_NOW.trim()
          ACCOUNT_REGISTRY_PREFIX = (REPOSITORY.split("/"))[0]
-         SLACK_TOKEN = SLACK_TOKEN.trim()
+         //SLACK_TOKEN = SLACK_TOKEN.trim()
           
           
           sh """
@@ -87,15 +87,7 @@ pipeline {
             
             sh "aws s3 cp ./unit/ s3://$S3_LOGS/$DATE_NOW/$GIT_COMMIT_HASH/unit/ --recursive"
             
-            sh"""
-              curl --location --request POST 'https://slack.com/api/chat.postMessage' \
-                    --header 'Authorization: Bearer $SLACK_TOKEN' \
-                    --header 'Content-Type: application/json' \
-                    --data-raw '{
-                        "channel": \"$CHANNEL_ID\",
-                        "text": \"$textMessage\"
-                    }'
-            """ 
+           
 
             if(inError) {
               
