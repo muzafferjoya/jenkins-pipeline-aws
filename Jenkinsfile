@@ -57,7 +57,7 @@ pipeline {
           try {
             testImage.inside('-v $WORKSPACE:/output -u root') {
               sh """
-                cd $PWD
+                cd $WORKSPACE
                 npm run test:unit
                 
                 if test -d /output/unit ; then
