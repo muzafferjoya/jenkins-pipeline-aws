@@ -17,11 +17,11 @@ pipeline {
         script {
           
 
-          ECR_REPO = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
+          
           //GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
           REPOSITORY = sh (script: "cat \$PWD/repository_url", returnStdout: true)
           REPOSITORY_TEST = sh (script: "cat \$PWD/repository_test_url", returnStdout: true)
-          
+          ECR_REPO = sh (script: "cat \$PWD/ecr_repo", returnStdout: true)
          
 
          REPOSITORY = REPOSITORY.trim()
