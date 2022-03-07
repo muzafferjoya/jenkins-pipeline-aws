@@ -40,7 +40,7 @@ pipeline {
       steps {
         echo 'Start building the project docker image for tests' 
         script {
-          testImage = docker.build("$REPOSITORY_TEST:$ecr_repo", "-f ./Dockerfile.test .")
+          testImage = docker.build("$REPOSITORY_TEST/$ecr_repo", "-f ./Dockerfile.test .")
           testImage.push()
         } 
       }
