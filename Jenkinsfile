@@ -23,7 +23,7 @@ pipeline {
           
          
 
-         
+         REPOSITORY = REPOSITORY.trim()
           REPOSITORY_TEST = REPOSITORY_TEST.trim()
          
          ACCOUNT_REGISTRY_PREFIX = (REPOSITORY.split("/"))[0]
