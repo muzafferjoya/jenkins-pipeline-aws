@@ -154,5 +154,35 @@ pipeline {
         }
       }
     }
+    stage("Run Load Balancing tests / Security Checks") {
+      steps {
+        echo 'Run load balancing tests and security checks'
+        script {
+          stagingImage.inside('-v $WORKSPACE:/output -u root') {
+            sh """
+            cd $WORKSPACE/server
+            npm rm loadtest
+            npm i loadtest
+            npm run test:load > /output/load_test.txt
+            """
+          }
+          
+          sh "aws s3 cp ./load_test.txt s3://$S3_LOGS/$DATE_NOW/$GIT_COMMIT_HASH/"
+
+          stagingImage.withRun('-p 8000:8000 -u root'){
+            sh """
+            
+            \$PWD/opt/arachni-1.5.1-0.5.12/bin/arachni http://\$(hostname):8000 --check=xss,code_injection --report-save-path=simple-web-app.com.afr
+        
+            \$PWD/opt/arachni-1.5.1-0.5.12/bin/arachni_reporter simple-web-app.com.afr --reporter=html:outfile=arachni_report.html.zip
+            """
+          }
+         
+          sh "aws s3 cp ./arachni_report.html.zip s3://$S3_LOGS/$DATE_NOW/$GIT_COMMIT_HASH/"
+
+          
+        }
+      }
+    }
   }
 }
