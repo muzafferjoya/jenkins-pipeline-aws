@@ -1,11 +1,11 @@
 def testImage
 //def stagingImage
-//def productionImage
+def productionImage
 def REPOSITORY
 def REPOSITORY_TEST
 def RESPOSITORY_STAGING
 def GIT_COMMIT_HASH
-//def INSTANCE_ID
+def INSTANCE_ID
 def ACCOUNT_REGISTRY_PREFIX
 def S3_LOGS
 def DATE_NOW
@@ -28,7 +28,7 @@ pipeline {
           REPOSITORY = sh (script: "cat \$PWD/repository_url", returnStdout: true)
           REPOSITORY_TEST = sh (script: "cat \$PWD/repository_test_url", returnStdout: true)
           REPOSITORY_STAGING = sh (script: "cat \$PWD/repository_staging_url", returnStdout: true)
-          
+          INSTANCE_ID = sh (script: "cat \$PWD/instance_id", returnStdout: true)
           //ECR_REPO = sh (script: "cat \$PWD/ecr_repo", returnStdout: true)
          
          REPOSITORY_STAGING = REPOSITORY_STAGING.trim()
@@ -181,6 +181,16 @@ pipeline {
           sh "aws s3 cp ./arachni_report.html.zip s3://$S3_LOGS/$DATE_NOW/$GIT_COMMIT_HASH/"
 
           
+        }
+      }
+    }
+    stage("Deploy to Fixed Server") {
+      steps {
+        echo 'Deploy release to production'
+        script {
+          productionImage = docker.build("$REPOSITORY:release")
+          productionImage.push()
+          sh "aws ec2 reboot-instances --region us-east-1 --instance-ids $INSTANCE_ID"
         }
       }
     }
