@@ -1,4 +1,4 @@
-FROM node:lts-alpine@sha256:b2da3316acdc2bec442190a1fe10dc094e7ba4121d029cb32075ff59bb27390a
+FROM node:12.16
   
 COPY --chown=node:node . /opt/app
 
