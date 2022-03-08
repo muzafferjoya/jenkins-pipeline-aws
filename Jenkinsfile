@@ -194,5 +194,30 @@ pipeline {
         }
       }
     }
+    stage("Clean Up") {
+      steps {
+        echo 'Clean up local docker images'
+        script {
+          sh """
+          # Change the :latest with the current ones
+          docker tag $REPOSITORY_TEST:$GIT_COMMIT_HASH  $REPOSITORY_TEST:latest
+          docker tag $REPOSITORY_STAGING:$GIT_COMMIT_HASH  $REPOSITORY_STAGING:latest
+          docker tag $REPOSITORY:release  $REPOSITORY:latest
+          # Remove the images
+          docker image rm $REPOSITORY_TEST:$GIT_COMMIT_HASH
+          docker image rm $REPOSITORY_STAGING:$GIT_COMMIT_HASH
+          docker image rm $REPOSITORY:release
+          # Remove dangling images
+          docker image prune -f
+          """
+        }
+        echo 'Clean up config.json file with ECR Docker Credentials'
+        script {
+          sh """
+          rm $HOME/.docker/config.json
+          """
+        }
+      }
+    }
   }
 }
