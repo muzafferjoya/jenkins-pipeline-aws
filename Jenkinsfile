@@ -1,5 +1,5 @@
 def testImage
-//def stagingImage
+def stagingImage
 def productionImage
 def REPOSITORY
 def REPOSITORY_TEST
