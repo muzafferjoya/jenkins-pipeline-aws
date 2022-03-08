@@ -145,6 +145,14 @@ pipeline {
         }
       }
     }
-  
+  stage("Build Staging Image") {
+      steps {
+        echo 'Build the staging image for more tests'
+        script {
+          stagingImage = docker.build("$REPOSITORY_STAGING:$GIT_COMMIT_HASH")
+          stagingImage.push()
+        }
+      }
+    }
   }
 }
